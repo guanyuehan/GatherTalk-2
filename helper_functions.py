@@ -1,46 +1,59 @@
-import psycopg2
+import psycopg
 import configparser
 from urllib.parse import urlparse
 
-def load_config(filename='database_remote.ini', section='postgres'):
-    db_config = {}
+def load_config(filename='database_local.ini', isURL=False):
 
     # Check for DATABASE_URL environment variable
     # Load from database.ini if DATABASE_URL is not set
     parser = configparser.RawConfigParser()
     parser.read(filename)
 
-    if parser.has_section(section):
-        params = parser.items(section)
-        for param in params:
-            db_config[param[0]] = param[1]
-    else:
-        raise Exception(f'Section {section} not found in the {filename} file')
+    section = 'postgres'
+    key_value_pair_postgres = parser.items(section)
+    params_parsed = {i[0]: i[1] for i in key_value_pair_postgres}
+    
 
-    # Parse the DATABASE_URL from the ini file if present
-    if 'database_url' in db_config:
-        url = urlparse(db_config['database_url'])
-        db_config = {
-            'host': url.hostname,
-            'database': url.path[1:],  # Remove leading '/'
-            'user': url.username,
-            'password': url.password,
-            'port': url.port
+    if not isURL:
+        pg_connection_dict = {
+            'dbname': params_parsed['dbname'],
+            'user': params_parsed['user'],
+            'password': params_parsed['password'],
+            'port': params_parsed['port'],
+            'host': params_parsed['host']
         }
-        
 
-    return db_config
+    elif isURL:
+        conStr = parser.items(section)[0][1]
+        url_parsed = urlparse(conStr)
+
+        pg_connection_dict = {
+            'dbname': url_parsed.path[1:],
+            'user': url_parsed.username,
+            'password': url_parsed.password,
+            'port': url_parsed.port,
+            'host': url_parsed.hostname
+        }
+
+    return pg_connection_dict
 
 def connect(config):
-    """ Connect to the PostgreSQL database server """
     try:
-        # connecting to the PostgreSQL server
-        with psycopg2.connect(**config) as conn:
+        with psycopg.connect(**config) as conn:
             print('Connected to the PostgreSQL server.')
-            return conn
-    except (psycopg2.DatabaseError, Exception) as error:
+            print(conn)
+        return psycopg.connect(**config) 
+    except (psycopg.DatabaseError, Exception) as error:
         print(error)
 
 
 if __name__ == '__main__':
-    print(connect(load_config(filename='database_local.ini')))
+    try:
+        conn = connect(load_config(filename='database_local.ini'))
+        print(conn)
+    except Exception as e:
+        print(f'error {e}')
+        conn.close()
+    finally:
+        print('conn closed')
+        conn.close()

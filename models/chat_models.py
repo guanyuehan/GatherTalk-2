@@ -1,5 +1,5 @@
 import helper_functions 
-import psycopg3
+import psycopg
 
 def insert_post_to_db(content: str):
     """ Insert a new post into the post table """
@@ -10,7 +10,7 @@ def insert_post_to_db(content: str):
     config = helper_functions.load_config(filename='database_local.ini')
 
     try:
-        with  psycopg3.connect(**config) as conn:
+        with  psycopg.connect(**config) as conn:
             with  conn.cursor() as cur:
                 cur.execute(sql, (content,))
 
@@ -19,7 +19,7 @@ def insert_post_to_db(content: str):
                     post_id = rows[0]
 
                 conn.commit()
-    except (Exception, psycopg3.DatabaseError) as error:
+    except (Exception, psycopg.DatabaseError) as error:
         print(error)
     finally:
         return post_id
@@ -31,12 +31,12 @@ def query_posts():
     config = helper_functions.load_config(filename='database_local.ini')
 
     try:
-        with psycopg2.connect(**config) as conn:
+        with psycopg.connect(**config) as conn:
             with conn.cursor() as cur:
                 cur.execute(sql)
 
                 rows = cur.fetchall()
-    except (Exception, psycopg2.DatabaseError) as error:
+    except (Exception, psycopg.DatabaseError) as error:
         print(error)
     finally:
         return rows
