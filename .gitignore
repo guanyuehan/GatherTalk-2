@@ -1,0 +1,13 @@
+/unused
+/pycache
+
+
+
+
+
+
+run_app.sh
+database_local.ini
+database_remote.ini
+run_app.sh
+Procfile

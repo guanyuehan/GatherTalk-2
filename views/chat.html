@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Com chat</title>
+    <link rel="stylesheet" href="../static/css/style.css" />
+    <link rel="stylesheet" href="../static/css/comment.css" />
+  </head>
+  <body>
+    <navbar-component selected="chat"></navbar-component>
+
+      <div id="chat"></div> 
+      <form onsubmit="addPost(event)" id="post-form">
+        <textarea
+          id="post-text-input"
+          type="text"
+          placeholder="Type something here..."
+        ></textarea>
+
+        <button type="submit">Send</button>
+      </form>
+      <button id="fetch-posts" onclick="fetchPosts()">Fetch posts</button>
+
+    <script src="../static/js/chat.js"></script>
+  </body>
+</html>
