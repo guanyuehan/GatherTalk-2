@@ -1,5 +1,6 @@
-p {
-  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+:root {
+  --primary-color: #67c2fe; /* Updated primary color */
+  --secondary-color: #2ecc71; /* New secondary color */
 }
 
 body {
@@ -8,7 +9,14 @@ body {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
+  background-color: var(--primary-color) !important;
+  color: var(--primary-color);
 }
+
+p {
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif; /* New p tag styling */
+}
+
 main {
   padding-left: 1%;
 }

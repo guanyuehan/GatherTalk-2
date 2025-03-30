@@ -4,7 +4,6 @@ from models.chat_models import insert_post_to_db, query_posts
 chat_bp = Blueprint('chat', __name__, template_folder="../views")
 
 
-#TEMPLATES
 @chat_bp.route('/')
 @chat_bp.route('/chat/')
 def chat_page():
